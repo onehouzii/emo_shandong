@@ -1,80 +1,59 @@
-import csv
+from shapely.geometry import Polygon, Point
+import numpy as np
+import pandas as pd
 import random
-import time
 
-# 山东省近似多边形（20个顶点）
-sd_coords = [
-    (117.500000, 34.400000), (118.350000, 34.850000),
-    (119.300000, 34.800000), (120.200000, 34.300000),
-    (121.000000, 34.700000), (122.000000, 36.500000),
-    (122.700000, 37.400000), (121.800000, 37.600000),
-    (120.800000, 37.800000), (119.700000, 37.500000),
-    (118.900000, 37.200000), (118.000000, 37.600000),
-    (117.200000, 38.200000), (115.800000, 37.800000),
-    (115.500000, 37.200000), (115.000000, 36.000000),
-    (115.300000, 35.300000), (116.200000, 35.100000),
-    (116.800000, 35.600000), (117.400000, 35.400000)
+# 山东省近似多边形坐标（优化版20顶点）
+shandong_coords = [
+    (115.500000, 35.200000), (116.300000, 36.000000),
+    (117.000000, 36.600000), (118.300000, 37.400000),
+    (119.100000, 37.400000), (120.300000, 37.500000),
+    (121.500000, 37.500000), (122.400000, 37.000000),
+    (122.700000, 36.000000), (121.500000, 35.500000),
+    (120.300000, 34.800000), (118.800000, 34.800000),
+    (117.200000, 34.200000), (116.000000, 34.400000),
+    (115.500000, 35.200000), (116.800000, 36.800000),
+    (117.800000, 37.200000), (118.500000, 37.300000),
+    (119.800000, 37.400000), (115.500000, 35.200000)  # 闭合
 ]
 
-# 射线法判断点是否在多边形内（纯Python实现）
-def is_point_in_polygon(lon, lat):
-    crossings = 0
-    for i in range(len(sd_coords)):
-        x1, y1 = sd_coords[i]
-        x2, y2 = sd_coords[(i+1)%len(sd_coords)]
-        if ((y1 > lat) != (y2 > lat)):
-            xinters = (lat - y1) * (x2 - x1) / (y2 - y1) + x1
-            if lon <= xinters:
-                crossings += 1
-    return crossings % 2 == 1
+polygon = Polygon(shandong_coords)
 
-# 城市配置（经度，纬度，权重）
-cities = {
-    '济南': (117.121225, 36.669981, 15),
-    '青岛': (120.384428, 36.105215, 25),
-    '烟台': (121.453926, 37.470892, 12),
-    '潍坊': (119.162349, 36.712502, 10),
-    '临沂': (118.362744, 35.110152, 10),
-    '济宁': (116.588116, 35.417743, 8),
-    '淄博': (118.061325, 36.819084, 7),
-    '泰安': (117.089415, 36.202048, 6),
-    '威海': (122.127541, 37.516430, 5),
-    '德州': (116.304558, 37.462044, 2)
-}
+# 人口密度权重配置（城市中心+标准差）
+population_centers = [
+    # (经度, 纬度, 生成权重, 分布标准差)
+    (117.0000, 36.6500, 0.18, 0.4),  # 济南
+    (120.3833, 36.0667, 0.22, 0.5),  # 青岛
+    (118.0500, 36.7833, 0.12, 0.3),  # 淄博
+    (119.1000, 37.4000, 0.08, 0.6),  # 东营
+    (121.3914, 37.5393, 0.10, 0.4),  # 烟台
+    (122.1167, 37.5000, 0.07, 0.3),  # 威海
+    (118.3500, 35.0500, 0.15, 0.5),  # 临沂
+    (116.5867, 35.4150, 0.08, 0.4),  # 济宁
+]
 
-# 生成概率分布列表
-city_weights = [c[2] for c in cities.values()]
-total_weight = sum(city_weights)
-probabilities = [w/total_weight for w in city_weights]
+# 权重标准化
+weights = np.array([c[2] for c in population_centers])
+probabilities = weights / weights.sum()
 
-# 生成1000个有效点
-random.seed(42)
 data = []
-emotions = ['快乐', '悲伤', '愤怒', '恐惧', '惊奇', '厌恶', '羞耻']
-
 while len(data) < 1000:
-    # 按权重随机选择城市
-    city = random.choices(list(cities.keys()), weights=probabilities, k=1)[0]
-    clon, clat, _ = cities[city]
+    # 按人口密度选择生成中心
+    center = population_centers[np.random.choice(len(population_centers), p=probabilities)]
     
-    # 生成随机偏移（标准差动态调整）
-    std_dev = 0.1 + 0.1 * (1 - cities[city][2]/25)
-    lon = random.gauss(clon, std_dev)
-    lat = random.gauss(clat, std_dev)
+    # 生成正态分布坐标
+    lon = np.random.normal(center[0], center[3]/2)  # 标准差减半防止过度扩散
+    lat = np.random.normal(center[1], center[3]/2)
     
-    # 边界快速检查
-    if 115.0 <= lon <= 122.7 and 34.3 <= lat <= 38.2:
-        # 精确多边形判断
-        if is_point_in_polygon(lon, lat):
-            # 生成情绪数据
-            emotion_idx = random.randint(0, 6)
-            row = [round(lon,6), round(lat,6)] + [1 if i == emotion_idx else 0 for i in range(7)]
-            data.append(row)
+    # 严格边界检查
+    if polygon.contains(Point(lon, lat)):
+        data.append([
+            round(lon, 6),  # 经度保留6位小数
+            round(lat, 6),  # 纬度保留6位小数
+            random.randint(1, 7)  # 情绪值单列
+        ])
 
-# 写入CSV文件
-with open('shandong_emotions.csv', 'w', newline='') as f:
-    writer = csv.writer(f)
-    writer.writerow(['lon','lat'] + emotions)
-    writer.writerows(data)
-
-print(f"成功生成{len(data)}条数据到 shandong_emotions.csv")
+# 创建DataFrame并保存
+df = pd.DataFrame(data, columns=['lon', 'lat', 'emo'])
+df.to_csv('shandong_emotion_data.csv', index=False, float_format='%.6f')
+print(f"成功生成{len(data)}条数据，示例：\n{df.head()}")
