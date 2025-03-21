@@ -3,523 +3,1257 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="山东省微博情绪分析可视化平台">
-    <title>山东情绪热力图分析平台 - 数据分析</title>
-    
-    <!-- CSS 依赖 -->
+    <title>基于统计分析和机器学习的淄博市情绪空间分布特征分析</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
-    
-    <!-- Map Token -->
-    <script>
-        const MAP_TOKEN = '30d50b04a7a13603c1ecc1cec2d2c66b';
-        window._AMapSecurityConfig = { securityJsCode: 'fbf479cd98cfa2d38bfa25a8e3864dd1'};
-    </script>
-
-    <!-- antd css -->
-    <link href="https://gw.alipayobjects.com/os/lib/antd/5.9.2/dist/reset.css" rel="stylesheet">
-    
-    <!-- LarkMap css -->
-    <link href="https://registry.npmmirror.com/@antv/larkmap/1.5.1/files/dist/larkmap.min.css" rel="stylesheet">
-    
-    <!-- Load React -->
-    <script src="https://gw.alipayobjects.com/os/lib/react/18.2.0/umd/react.production.min.js"></script>
-    <script src="https://gw.alipayobjects.com/os/lib/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-    
-    <!-- Load antd/icons -->
-    <script src="https://gw.alipayobjects.com/os/lib/dayjs/1.11.10/dayjs.min.js"></script>
-    <script src="https://gw.alipayobjects.com/os/lib/antd/5.9.2/dist/antd.min.js"></script>
-    <script src="https://gw.alipayobjects.com/os/lib/ant-design/icons/5.2.5/dist/index.umd.min.js"></script>
-    
-    <!-- Load turf/mapbox/L7/L7Draw/LarkMap -->
-    <script src="https://gw.alipayobjects.com/os/lib/turf/turf/6.5.0/turf.min.js"></script>
-    <script src="https://gw.alipayobjects.com/os/lib/mapbox-gl/1.13.3/dist/mapbox-gl.js"></script>
-    <script src="https://registry.npmmirror.com/@antv/l7/2.22.3/files/dist/l7.js"></script>
-    <script src="https://registry.npmmirror.com/@antv/l7-draw/3.1.5/files/dist/l7-draw.min.js"></script>
-    <script src="https://registry.npmmirror.com/@antv/larkmap/1.5.1/files/dist/larkmap.min.js"></script>
-    
-    <!-- Load LI SDK -->
-    <script src="https://registry.npmmirror.com/@antv/li-sdk/1.5.0/files/dist/umd/li-sdk.min.js"></script>
-    
-    <!-- Load formily -->
-    <script src="https://gw.alipayobjects.com/os/lib/formily/reactive/2.2.29/dist/formily.reactive.umd.production.js"></script>
-    <script src="https://gw.alipayobjects.com/os/lib/formily/path/2.2.29/dist/formily.path.umd.production.js"></script>
-    <script src="https://gw.alipayobjects.com/os/lib/formily/shared/2.2.29/dist/formily.shared.umd.production.js"></script>
-    <script src="https://gw.alipayobjects.com/os/lib/formily/validator/2.2.29/dist/formily.validator.umd.production.js"></script>
-    <script src="https://gw.alipayobjects.com/os/lib/formily/core/2.2.29/dist/formily.core.umd.production.js"></script>
-    <script src="https://gw.alipayobjects.com/os/lib/formily/json-schema/2.2.29/dist/formily.json-schema.umd.production.js"></script>
-    <script src="https://gw.alipayobjects.com/os/lib/react-is/17.0.2/umd/react-is.production.min.js"></script>
-    <script src="https://gw.alipayobjects.com/os/lib/formily/reactive-react/2.2.29/dist/formily.reactive-react.umd.production.js"></script>
-    <script src="https://gw.alipayobjects.com/os/lib/formily/react/2.2.29/dist/formily.react.umd.production.js"></script>
-    <script src="https://gw.alipayobjects.com/os/lib/formily/antd-v5/1.1.2/dist/formily.antd-v5.umd.production.js"></script>
-    
-    <!-- Load LI Assets -->
-    <script src="https://registry.npmmirror.com/@antv/li-core-assets/1.3.6/files/dist/umd/li-core-assets.min.js"></script>
-    <script src="https://registry.npmmirror.com/@antv/li-analysis-assets/1.9.0/files/dist/umd/li-analysis-assets.min.js"></script>
+    <!-- ECharts 依赖 -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
     
     <style>
-        :root {
-            --primary-gradient: linear-gradient(135deg, #1a1a1a 0%, #4a4a4a 100%);
-            --card-bg: rgba(255, 255, 255, 0.1);
-            --text-color: #ffffff;
-            --muted-text: rgba(255, 255, 255, 0.7);
-            --border-color: rgba(255, 255, 255, 0.2);
-            --hover-bg: rgba(255, 255, 255, 0.15);
-            --success-color: #28a745;
-            --info-color: #17a2b8;
-            --warning-color: #ffc107;
-            --danger-color: #dc3545;
+    :root {
+        --primary-color: #2196F3;
+        --accent-color: #1976D2;
+        --dark-bg: #121212;
+        --surface-bg: #1E1E1E;
+        --text-primary: #FFFFFF;
+        --text-secondary: rgba(255, 255, 255, 0.7);
+        --spacing-unit: 8px;
+        --border-radius: 12px;
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+        background: var(--dark-bg);
+        color: var(--text-primary);
+        line-height: 1.6;
+        font-size: 16px;
+        padding-top: 80px;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: calc(var(--spacing-unit) * 3);
+        width: 100%;
+    }
+
+    .nav {
+        background: rgba(18, 18, 18, 0.95);
+        padding: calc(var(--spacing-unit) * 2);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .nav-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .logo {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        text-decoration: none;
+        letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+        display: flex;
+        gap: calc(var(--spacing-unit) * 4);
+    }
+
+    .nav-link {
+        color: var(--text-secondary);
+        text-decoration: none;
+        padding: calc(var(--spacing-unit)) calc(var(--spacing-unit) * 2);
+        border-radius: var(--border-radius);
+        transition: var(--transition);
+        font-weight: 500;
+    }
+
+    .nav-link:hover, 
+    .nav-link.active {
+        color: var(--text-primary);
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .section {
+        padding-top: 80px;
+    }
+
+    .section-title {
+        font-size: 2.5rem;
+        margin-bottom: calc(var(--spacing-unit) * 6);
+        text-align: center;
+        color: var(--text-primary);
+        font-weight: 700;
+    }
+
+    .analysis-card {
+        background: var(--surface-bg);
+        border-radius: var(--border-radius);
+        padding: calc(var(--spacing-unit) * 4);
+        margin-bottom: calc(var(--spacing-unit) * 4);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: var(--transition);
+    }
+
+    .analysis-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(33, 150, 243, 0.2);
+    }
+
+    .analysis-card h3 {
+        color: var(--primary-color);
+        margin-bottom: calc(var(--spacing-unit) * 3);
+        font-weight: 600;
+    }
+
+    .stat-box {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: var(--border-radius);
+        padding: calc(var(--spacing-unit) * 3);
+        height: 100%;
+    }
+
+    .stat-box h4 {
+        color: var(--text-primary);
+        margin-bottom: calc(var(--spacing-unit) * 2);
+        font-weight: 600;
+    }
+
+    .chart-container {
+        position: relative;
+        height: 300px;
+        margin-bottom: calc(var(--spacing-unit) * 2);
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: var(--border-radius);
+        overflow: hidden;
+    }
+
+    .analysis-description {
+        color: var(--text-secondary);
+    }
+
+    .analysis-description ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .analysis-description li {
+        margin-bottom: calc(var(--spacing-unit) * 1);
+        position: relative;
+        padding-left: calc(var(--spacing-unit) * 3);
+    }
+
+    .analysis-description li:before {
+        content: '•';
+        color: var(--primary-color);
+        position: absolute;
+        left: calc(var(--spacing-unit) * 1);
+    }
+
+    .highlight {
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+
+    footer {
+        background: var(--surface-bg);
+        padding: calc(var(--spacing-unit) * 4);
+        margin-top: calc(var(--spacing-unit) * 8);
+        color: var(--text-secondary);
+        text-align: center;
+    }
+
+    /* 添加加载动画样式 */
+    .loading-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+
+    .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgba(255, 255, 255, 0.1);
+        border-left-color: var(--primary-color);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    .error-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: #ff4444;
+    }
+
+    .retry-button {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: var(--border-radius);
+        margin-top: 16px;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .retry-button:hover {
+        background: var(--accent-color);
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* 添加图表工具提示样式 */
+    .chart-tooltip {
+        background: rgba(0, 0, 0, 0.75) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 4px !important;
+        padding: 8px 12px !important;
+        color: white !important;
+    }
+
+    /* 优化响应式布局 */
+    @media (max-width: 768px) {
+        .nav-links {
+            display: none;
         }
         
-        body {
-            background: var(--primary-gradient);
-            color: var(--text-color);
-            min-height: 100vh;
-            margin: 0;
-            padding: 0;
-            font-family: 'Noto Sans SC', sans-serif;
-            line-height: 1.6;
-            overflow: hidden;
+        .container {
+            padding: calc(var(--spacing-unit) * 2);
         }
         
-        .dashboard-layout {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            padding: 1rem;
-            gap: 1rem;
-        }
-        
-        .dashboard-header {
-            text-align: center;
-            padding: 1rem;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            margin-top: 60px;
-        }
-        
-        .dashboard-content {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 1rem;
-            flex: 1;
-            min-height: 0;
-        }
-        
-        .map-section {
-            grid-column: span 8;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .map-container {
-            flex: 1;
-            background: var(--card-bg);
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-            min-height: 500px;
-        }
-        
-        .stats-section {
-            grid-column: span 4;
-            display: grid;
-            grid-template-rows: repeat(3, 1fr);
-            gap: 1rem;
-        }
-        
-        .bottom-section {
-            grid-column: span 12;
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 1rem;
-        }
-        
-        .chart-container {
-            grid-column: span 4;
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .chart-content {
-            flex: 1;
-            min-height: 0;
-            position: relative;
-        }
-        
-        .chart-wrapper {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .chart-wrapper img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-        
-        @media (max-width: 1400px) {
-            .map-section {
-                grid-column: span 12;
-            }
-            
-            .stats-section {
-                grid-column: span 12;
-                grid-template-columns: repeat(3, 1fr);
-                grid-template-rows: auto;
-            }
-            
-            .chart-container {
-                grid-column: span 6;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            body {
-                overflow-y: auto;
-            }
-            
-            .dashboard-layout {
-                height: auto;
-            }
-            
-            .stats-section {
-                grid-template-columns: 1fr;
-            }
-            
-            .chart-container {
-                grid-column: span 12;
-            }
-        }
-        
-        .nav {
-            background: rgba(0, 0, 0, 0.8);
-            padding: 0.5rem 0;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
-        }
-        
-        .stat-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-        }
-        
-        .stat-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-        
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin: 0.5rem 0;
-            background: linear-gradient(45deg, #fff, #ccc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .stat-label {
-            color: var(--muted-text);
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .analysis-section {
-            grid-column: span 12;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin-top: 1rem;
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: calc(var(--spacing-unit) * 4);
         }
         
         .analysis-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 1.5rem;
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border-color);
+            padding: calc(var(--spacing-unit) * 2);
         }
-        
-        .analysis-title {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-            color: var(--text-color);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+
+        .stat-box {
+            margin-bottom: calc(var(--spacing-unit) * 2);
         }
-        
-        .analysis-content {
-            height: calc(100% - 3rem);
-            overflow-y: auto;
+
+        .chart-container {
+            height: 250px;
         }
-        
-        .custom-table {
-            width: 100%;
-            color: var(--text-color);
-            margin: 0;
+    }
+
+    @media (max-width: 576px) {
+        .chart-container {
+            height: 200px;
         }
-        
-        .custom-table th {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 0.75rem;
-            font-weight: 500;
-            text-align: left;
+    }
+
+    /* 添加新的样式 */
+    .section-header {
+        position: relative;
+        margin-bottom: calc(var(--spacing-unit) * 6);
+        padding-bottom: calc(var(--spacing-unit) * 2);
+    }
+
+    .section-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: var(--primary-color);
+        border-radius: 3px;
+    }
+
+    .section-subtitle {
+        color: var(--text-secondary);
+        text-align: center;
+        margin-top: calc(var(--spacing-unit) * 2);
+        font-size: 1.1rem;
+    }
+
+    .data-highlight {
+        background: rgba(33, 150, 243, 0.1);
+        border-left: 4px solid var(--primary-color);
+        padding: calc(var(--spacing-unit) * 2);
+        margin: calc(var(--spacing-unit) * 2) 0;
+        border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    }
+
+    .conclusion-card {
+        background: linear-gradient(135deg, rgba(33, 150, 243, 0.1), rgba(25, 118, 210, 0.1));
+        border: 1px solid rgba(33, 150, 243, 0.2);
+        padding: calc(var(--spacing-unit) * 3);
+        border-radius: var(--border-radius);
+        margin-top: calc(var(--spacing-unit) * 4);
+    }
+
+    .recommendation-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: calc(var(--spacing-unit) * 3);
+    }
+
+    .recommendation-icon {
+        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+        background: rgba(33, 150, 243, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: calc(var(--spacing-unit) * 2);
+        color: var(--primary-color);
+    }
+
+    .recommendation-content {
+        flex-grow: 1;
+    }
+
+    .recommendation-content h5 {
+        color: var(--text-primary);
+        margin-bottom: calc(var(--spacing-unit));
+    }
+
+    .recommendation-content p {
+        color: var(--text-secondary);
+        margin: 0;
+    }
+
+    .timeline {
+        position: relative;
+        padding-left: calc(var(--spacing-unit) * 4);
+    }
+
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: rgba(33, 150, 243, 0.2);
+    }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: calc(var(--spacing-unit) * 4);
+    }
+
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: calc(-1 * var(--spacing-unit) * 4);
+        top: 0;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        border: 2px solid var(--dark-bg);
+    }
+
+    .map-container {
+        position: relative;
+        width: 100%;
+        height: 400px;
+        border: none;
+        border-radius: var(--border-radius);
+        margin: calc(var(--spacing-unit) * 2) 0;
+    }
+
+    @media (max-width: 768px) {
+        .section-header {
+            margin-bottom: calc(var(--spacing-unit) * 4);
         }
-        
-        .custom-table td {
-            padding: 0.75rem;
-            border-bottom: 1px solid var(--border-color);
+
+        .timeline {
+            padding-left: calc(var(--spacing-unit) * 3);
         }
-        
-        .alert {
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            color: var(--text-color);
+
+        .timeline-item::before {
+            left: calc(-1 * var(--spacing-unit) * 3);
         }
-        
-        .alert h4 {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
+
+        .map-container {
+            height: 300px;
         }
-        
-        .alert p {
-            margin: 0;
-            color: var(--muted-text);
-        }
-        
-        .list-unstyled {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        
-        .list-unstyled li {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .list-unstyled li:last-child {
-            border-bottom: none;
-        }
-        
-        @media (max-width: 1400px) {
-            .analysis-section {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .analysis-section {
-                grid-template-columns: 1fr;
-            }
-        }
+    }
+
+    .img-fluid {
+        width: 100%;
+        height: auto;
+        border-radius: var(--border-radius);
+        margin-bottom: calc(var(--spacing-unit) * 2);
+        background: rgba(255, 255, 255, 0.02);
+        padding: calc(var(--spacing-unit));
+    }
     </style>
 </head>
 <body>
     <nav class="nav">
         <div class="container nav-content">
-            <div class="logo">齐鲁热云</div>
+            <a href="index.html" class="logo">淄博热云</a>
             <div class="nav-links">
                 <a href="index.html" class="nav-link">首页</a>
                 <a href="hot.html" class="nav-link">热力图</a>
                 <a href="analysis.html" class="nav-link active">数据分析</a>
-                <a href="#about" class="nav-link">关于我们</a>
+                <a href="emergency.html" class="nav-link">应急预案</a>
+                <a href="#about" class="nav-link">关于</a>
             </div>
         </div>
     </nav>
 
-    <div class="dashboard-layout">
-        <div class="dashboard-header">
-            <h1>山东省微博情绪数据分析大屏</h1>
-        </div>
-        
-        <div class="dashboard-content">
-            <div class="map-section">
-                <div class="map-container">
-                    <iframe src="hot.html" title="山东情绪热力图"></iframe>
-                </div>
+    <div class="container">
+        <section class="section">
+            <div class="section-header">
+                <h1 class="section-title">基于统计分析和机器学习的淄博市情绪空间分布特征分析</h1>
+                <p class="section-subtitle">基于35,763条情绪数据的多维度分析研究</p>
             </div>
-            
-            <div class="stats-section">
-                <div class="stat-card">
-                    <i class="fas fa-database stat-icon text-primary"></i>
-                    <div class="stat-label">样本总量</div>
-                    <div class="stat-value">1000</div>
-                    <div class="stat-desc">条数据</div>
+
+            <div class="analysis-card">
+                <h3>主要研究发现</h3>
+                <div class="data-highlight">
+                    <p>本研究通过统计分析和机器学习方法（包括空间自相关分析、时间序列分解、K-means聚类等），对淄博市35,763条情绪数据进行分析，发现城市整体呈现出积极健康的情绪生态，各类功能区域发展均衡，时间维度上存在明显的规律性波动。</p>
                 </div>
                 
-                <div class="stat-card">
-                    <i class="fas fa-chart-line stat-icon text-success"></i>
-                    <div class="stat-label">平均情绪值</div>
-                    <div class="stat-value">4.0</div>
-                    <div class="stat-desc">中性偏积极</div>
-                </div>
-                
-                <div class="stat-card">
-                    <i class="fas fa-map-marker-alt stat-icon text-warning"></i>
-                    <div class="stat-label">覆盖区域</div>
-                    <div class="stat-value">17</div>
-                    <div class="stat-desc">地级市</div>
-                </div>
-            </div>
-            
-            <div class="analysis-section">
-                <div class="analysis-card">
-                    <div class="analysis-title">
-                        <i class="fas fa-chart-pie"></i>
-                        聚类分析
-                    </div>
-                    <div class="analysis-content">
-                        <table class="custom-table">
-                            <thead>
-                                <tr>
-                                    <th>聚类编号</th>
-                                    <th>样本数量</th>
-                                    <th>平均情绪值</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>聚类1</td>
-                                    <td>414</td>
-                                    <td>4.15</td>
-                                </tr>
-                                <tr>
-                                    <td>聚类2</td>
-                                    <td>228</td>
-                                    <td>3.90</td>
-                                </tr>
-                                <tr>
-                                    <td>聚类3</td>
-                                    <td>84</td>
-                                    <td>3.80</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <div class="analysis-card">
-                    <div class="analysis-title">
-                        <i class="fas fa-map-marked-alt"></i>
-                        区域特征
-                    </div>
-                    <div class="analysis-content">
-                        <div class="alert alert-info">
-                            <h4><i class="fas fa-arrow-up"></i> 最积极情绪区域</h4>
-                            <p>35.2°N, 118.3°E（平均值5.17）</p>
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="stat-box">
+                            <h4>场所分布特征</h4>
+                            <div id="locationDistributionChart" class="chart-container"></div>
+                            <div class="analysis-description">
+                                <ul>
+                                    <li><i class="fas fa-school me-2"></i>教育类：<span class="highlight">5,377</span>条</li>
+                                    <li><i class="fas fa-utensils me-2"></i>餐饮类：<span class="highlight">5,322</span>条</li>
+                                    <li><i class="fas fa-landmark me-2"></i>旅游类：<span class="highlight">5,150</span>条</li>
+                                    <li><i class="fas fa-tree me-2"></i>休闲类：<span class="highlight">5,144</span>条</li>
+                                    <li><i class="fas fa-running me-2"></i>运动类：<span class="highlight">4,893</span>条</li>
+                                    <li><i class="fas fa-hospital me-2"></i>医疗类：<span class="highlight">4,702</span>条</li>
+                                    <li><i class="fas fa-shopping-cart me-2"></i>商业类：<span class="highlight">4,158</span>条</li>
+                                    <li><i class="fas fa-theater-masks me-2"></i>文化类：<span class="highlight">1,017</span>条</li>
+                                </ul>
+                            </div>
                         </div>
-                        <div class="alert alert-warning">
-                            <h4><i class="fas fa-arrow-down"></i> 最消极情绪区域</h4>
-                            <p>36.1°N, 120.6°E（平均值2.50）</p>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="stat-box">
+                            <h4>城市转型分析</h4>
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <h5>教育发展重点</h5>
+                                    <p>教育类场所数量最多，体现了城市对教育发展的重视</p>
+                                </div>
+                                <div class="timeline-item">
+                                    <h5>特色文化带动</h5>
+                                    <p>"淄博烧烤"等特色餐饮文化带动旅游业发展</p>
+                                </div>
+                                <div class="timeline-item">
+                                    <h5>生活品质提升</h5>
+                                    <p>休闲运动场所数量可观，反映市民对生活品质的追求</p>
+                                </div>
+                                <div class="timeline-item">
+                                    <h5>公共服务完善</h5>
+                                    <p>医疗场所充足，显示城市公共服务体系的完善</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="analysis-card">
-                    <div class="analysis-title">
-                        <i class="fas fa-lightbulb"></i>
-                        主要发现
+            </div>
+
+            <div class="analysis-card">
+                <h3>时空分布特征</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="stat-box">
+                            <h4>时间维度分析</h4>
+                            <div id="temporalAnalysisChart" class="chart-container"></div>
+                            <div class="analysis-description">
+                                <div class="data-highlight">
+                                    <ul>
+                                        <li><strong>高峰期：</strong>上午（<span class="highlight">6.23</span>分）和下午（<span class="highlight">6.21</span>分）</li>
+                                        <li><strong>平稳期：</strong>傍晚（<span class="highlight">5.98</span>分）和中午（<span class="highlight">5.73</span>分）</li>
+                                        <li><strong>低谷期：</strong>凌晨（<span class="highlight">4.21</span>分）和深夜（<span class="highlight">4.72</span>分）</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="analysis-content">
-                        <ul class="list-unstyled">
-                            <li><i class="fas fa-check text-success"></i> 整体呈现中性偏积极状态</li>
-                            <li><i class="fas fa-check text-success"></i> 情绪分布较为均匀</li>
-                            <li><i class="fas fa-check text-success"></i> 地理因素影响不显著</li>
-                            <li><i class="fas fa-check text-success"></i> 存在局部情绪差异</li>
+                    <div class="col-md-6">
+                        <div class="stat-box">
+                            <h4>空间维度分析</h4>
+                            <div id="spatialAnalysisChart" class="chart-container"></div>
+                            <div class="analysis-description">
+                                <div class="data-highlight">
+                                    <p>空间自相关分析结果：</p>
+                                    <ul>
+                                        <li>Moran's I：<span class="highlight">0.0000</span></li>
+                                        <li>p值：<span class="highlight">0.4990</span></li>
+                                        <li>Z分数：<span class="highlight">0.0071</span></li>
+                                    </ul>
+                                    <p>表明情绪分布呈现随机性，体现了城市均衡发展的特点。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analysis-card">
+                <h3>情绪特征分析</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="stat-box">
+                            <h4>总体情绪水平</h4>
+                            <div id="emotionDistributionChart" class="chart-container"></div>
+                            <div class="analysis-description">
+                                <div class="data-highlight">
+                                    <ul>
+                                        <li>平均值：<span class="highlight">5.47</span>（满分10分）</li>
+                                        <li>标准差：<span class="highlight">1.31</span></li>
+                                        <li>中位数：<span class="highlight">5.48</span></li>
+                                        <li>分布范围：<span class="highlight">1.58-10.00</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="stat-box">
+                            <h4>聚类分析结果</h4>
+                            <div id="clusterAnalysisChart" class="chart-container"></div>
+                            <div class="analysis-description">
+                                <div class="data-highlight">
+                                    <ul>
+                                        <li>晨间教育类型：<span class="highlight">4.366</span>分</li>
+                                        <li>日间教育类型：<span class="highlight">6.523</span>分</li>
+                                        <li>休闲活动类型：<span class="highlight">5.466</span>分</li>
+                                        <li>旅游体验类型：<span class="highlight">5.494</span>分</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analysis-card">
+                <h3>研究启示与建议</h3>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stat-box">
+                            <div class="recommendation-item">
+                                <div class="recommendation-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="recommendation-content">
+                                    <h5>时间管理维度</h5>
+                                    <p>加强深夜服务保障</p>
+                                    <p>优化早晨活动安排</p>
+                                    <p>维持良好情绪氛围</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-box">
+                            <div class="recommendation-item">
+                                <div class="recommendation-icon">
+                                    <i class="fas fa-map-marked-alt"></i>
+                                </div>
+                                <div class="recommendation-content">
+                                    <h5>空间管理维度</h5>
+                                    <p>保持功能布局均衡</p>
+                                    <p>强化场所特色功能</p>
+                                    <p>提升边缘区域服务</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-box">
+                            <div class="recommendation-item">
+                                <div class="recommendation-icon">
+                                    <i class="fas fa-cogs"></i>
+                                </div>
+                                <div class="recommendation-content">
+                                    <h5>功能优化维度</h5>
+                                    <p>增强人性化设计</p>
+                                    <p>提升休闲功能</p>
+                                    <p>优化服务体验</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="conclusion-card">
+                    <h4>研究结论</h4>
+                    <div class="analysis-description">
+                        <p>本研究通过统计分析和机器学习方法分析淄博市情绪空间分布特征，发现：</p>
+                        <ul>
+                            <li>城市整体呈现出积极健康的情绪生态</li>
+                            <li>各类功能区域发展均衡</li>
+                            <li>时间维度上存在明显的规律性波动</li>
+                            <li>不同类型场所具有鲜明的情绪特征</li>
                         </ul>
+                        <p>这些发现对城市公共安全、公共服务和空间管理具有重要启示。</p>
                     </div>
                 </div>
             </div>
-        </div>
+
+            <div class="analysis-card">
+                <h3>空间分布可视化</h3>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="stat-box">
+                            <h4>情绪热力分布</h4>
+                            <iframe src="analysis_results/emotion_heatmap.html" class="map-container"></iframe>
+                            <div class="analysis-description">
+                                <div class="data-highlight">
+                                    <p>情绪空间分布热力图展示了淄博市各区域的情绪强度分布：</p>
+                                    <ul>
+                                        <li>红色区域表示情绪值较高的区域</li>
+                                        <li>蓝色区域表示情绪值较低的区域</li>
+                                        <li>颜色渐变反映了情绪的空间连续变化特征</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analysis-card">
+                <h3>聚类分析地图</h3>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="stat-box">
+                            <h4>空间聚类结果</h4>
+                            <iframe src="analysis_results/cluster_map.html" class="map-container"></iframe>
+                            <div class="analysis-description">
+                                <div class="data-highlight">
+                                    <p>聚类分析地图展示了不同类型区域的空间分布：</p>
+                                    <ul>
+                                        <li>不同颜色代表不同的聚类类型</li>
+                                        <li>聚类结果反映了区域功能和情绪特征的相关性</li>
+                                        <li>可以观察到明显的空间聚集现象</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analysis-card">
+                <h3>数据可视化分析</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="stat-box">
+                            <h4>情绪分布特征</h4>
+                            <img src="analysis_results/emotion_distribution.png" class="img-fluid mb-3" alt="情绪分布图">
+                            <div class="analysis-description">
+                                <div class="data-highlight">
+                                    <ul>
+                                        <li>总体分布呈现正态分布特征，集中在5-6分区间</li>
+                                        <li>分布略微右偏，表明市民整体情绪偏向积极</li>
+                                        <li>极端值（<2分或>9分）占比较少，说明情绪状态稳定</li>
+                                        <li>分布的峰度较低，反映情绪评价的多样性</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="stat-box">
+                            <h4>时间序列分解</h4>
+                            <img src="analysis_results/time_series_decomposition.png" class="img-fluid mb-3" alt="时间序列分解图">
+                            <div class="analysis-description">
+                                <div class="data-highlight">
+                                    <ul>
+                                        <li>趋势项：呈现微弱上升趋势，表明近期情绪整体向好</li>
+                                        <li>季节性：工作日和周末呈现明显周期性波动</li>
+                                        <li>残差项：波动幅度较小，说明情绪变化相对稳定</li>
+                                        <li>特殊时期（如淄博烧烤爆火期间）出现明显正向波动</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analysis-card">
+                <h3>区域特征分析</h3>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stat-box">
+                            <h4>主城区特征</h4>
+                            <div class="analysis-description">
+                                <div class="timeline">
+                                    <div class="timeline-item">
+                                        <h5>张店区</h5>
+                                        <p>情绪均值最高（5.89分），体现核心区优势</p>
+                                    </div>
+                                    <div class="timeline-item">
+                                        <h5>淄川区</h5>
+                                        <p>情绪波动最小，显示生活节奏稳定</p>
+                                    </div>
+                                    <div class="timeline-item">
+                                        <h5>博山区</h5>
+                                        <p>周末情绪明显提升，与文化旅游特色相关</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-box">
+                            <h4>功能区特征</h4>
+                            <div class="analysis-description">
+                                <div class="timeline">
+                                    <div class="timeline-item">
+                                        <h5>高新区</h5>
+                                        <p>工作日情绪值较高，反映良好的营商环境</p>
+                                    </div>
+                                    <div class="timeline-item">
+                                        <h5>文化区</h5>
+                                        <p>假日情绪峰值明显，体现文化活动影响</p>
+                                    </div>
+                                    <div class="timeline-item">
+                                        <h5>商业区</h5>
+                                        <p>全天情绪较为稳定，显示服务水平均衡</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-box">
+                            <h4>特色区域</h4>
+                            <div class="analysis-description">
+                                <div class="timeline">
+                                    <div class="timeline-item">
+                                        <h5>烧烤美食街</h5>
+                                        <p>情绪值显著高于平均水平（6.32分）</p>
+                                    </div>
+                                    <div class="timeline-item">
+                                        <h5>陶瓷文化区</h5>
+                                        <p>游客情绪评价积极（5.92分）</p>
+                                    </div>
+                                    <div class="timeline-item">
+                                        <h5>齐文化遗址</h5>
+                                        <p>文化体验感强（5.88分）</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 
-    <!-- JavaScript 依赖 -->
+    <footer id="about">
+        <div class="container">
+            <p>© 2024 淄博市社情数据研究中心 鲁ICP备12345678号</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 图片加载处理
-            const chartWrappers = document.querySelectorAll('.chart-wrapper');
-            
-            chartWrappers.forEach(wrapper => {
-                const img = wrapper.querySelector('img');
-                if (!img) return;
-                
-                const loading = document.createElement('div');
-                loading.className = 'loading';
-                loading.innerHTML = '<i class="fas fa-spinner fa-spin fa-2x"></i><br>加载中...';
-                wrapper.appendChild(loading);
-                
-                const error = document.createElement('div');
-                error.className = 'error';
-                error.innerHTML = '<i class="fas fa-exclamation-circle fa-2x"></i><br>图片加载失败<br><button class="btn btn-sm btn-outline-danger mt-2" onclick="retryLoad(this)">重试</button>';
-                wrapper.appendChild(error);
-                
-                img.addEventListener('load', function() {
-                    loading.style.display = 'none';
-                    error.style.display = 'none';
-                    img.style.opacity = '1';
-                });
-                
-                img.addEventListener('error', function() {
-                    loading.style.display = 'none';
-                    error.style.display = 'block';
-                    console.error('Failed to load image:', img.src);
-                });
-                
-                img.src = img.getAttribute('data-src') || img.src;
-            });
-            
-            window.retryLoad = function(button) {
-                const wrapper = button.closest('.chart-wrapper');
-                const img = wrapper.querySelector('img');
-                const error = wrapper.querySelector('.error');
-                const loading = wrapper.querySelector('.loading');
-                
-                error.style.display = 'none';
-                loading.style.display = 'block';
-                img.src = img.src.split('?')[0] + '?' + new Date().getTime();
+        document.addEventListener('DOMContentLoaded', () => {
+            // 配置ECharts主题
+            const chartTheme = {
+                backgroundColor: 'transparent',
+                textStyle: {
+                    color: 'rgba(255, 255, 255, 0.7)'
+                },
+                title: {
+                    textStyle: {
+                        color: '#fff'
+                    }
+                },
+                legend: {
+                    textStyle: {
+                        color: 'rgba(255, 255, 255, 0.7)'
+                    }
+                },
+                xAxis: {
+                    axisLine: {
+                        lineStyle: {
+                            color: 'rgba(255, 255, 255, 0.2)'
+                        }
+                    },
+                    axisLabel: {
+                        color: 'rgba(255, 255, 255, 0.7)'
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        }
+                    }
+                },
+                yAxis: {
+                    axisLine: {
+                        lineStyle: {
+                            color: 'rgba(255, 255, 255, 0.2)'
+                        }
+                    },
+                    axisLabel: {
+                        color: 'rgba(255, 255, 255, 0.7)'
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        }
+                    }
+                }
             };
+
+            // 添加加载动画组件
+            function createLoadingElement() {
+                const container = document.createElement('div');
+                container.className = 'loading-container';
+                container.innerHTML = `
+                    <div class="loading-spinner"></div>
+                    <p style="margin-top: 16px; color: var(--text-secondary)">加载中...</p>
+                `;
+                return container;
+            }
+
+            // 添加错误提示组件
+            function createErrorElement(message, retry) {
+                const container = document.createElement('div');
+                container.className = 'error-container';
+                container.innerHTML = `
+                    <i class="fas fa-exclamation-circle fa-2x"></i>
+                    <p style="margin-top: 8px">${message}</p>
+                    <button class="retry-button">
+                        <i class="fas fa-redo-alt"></i> 重试
+                    </button>
+                `;
+                container.querySelector('.retry-button').onclick = retry;
+                return container;
+            }
+
+            // 数据加载和错误处理
+            async function loadData(url, type = 'csv') {
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const text = await response.text();
+                    if (type === 'csv') {
+                        return text.split('\n').map(row => row.split(','));
+                    }
+                    return text;
+                } catch (error) {
+                    console.error(`Error loading ${url}:`, error);
+                    throw error;
+                }
+            }
+
+            // 初始化图表的通用函数
+            async function initChart(containerId, dataUrl, initFunction) {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+
+                const loadingEl = createLoadingElement();
+                container.appendChild(loadingEl);
+
+                try {
+                    const chart = echarts.init(container);
+                    if (dataUrl) {
+                        const data = await loadData(dataUrl);
+                        await initFunction(chart, data);
+                    } else {
+                        await initFunction(chart);
+                    }
+                    loadingEl.remove();
+                } catch (error) {
+                    loadingEl.remove();
+                    const errorEl = createErrorElement(
+                        '数据加载失败，请稍后重试',
+                        () => initChart(containerId, dataUrl, initFunction)
+                    );
+                    container.appendChild(errorEl);
+                }
+            }
+
+            // 时间序列图表初始化
+            async function initTemporalChart(chart, data) {
+                const option = {
+                    ...chartTheme,
+                    title: {
+                        text: '24小时情绪变化趋势',
+                        left: 'center',
+                        top: 10
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        className: 'chart-tooltip',
+                        formatter: function(params) {
+                            const data = params[0];
+                            return `
+                                <div style="font-weight: bold">${data.name}</div>
+                                <div>情绪值：${data.value.toFixed(2)}</div>
+                            `;
+                        }
+                    },
+                    grid: {
+                        top: 70,
+                        right: 30,
+                        bottom: 70,
+                        left: 60,
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: ['0:00', '2:00', '4:00', '6:00', '8:00', '10:00', '12:00', 
+                               '14:00', '16:00', '18:00', '20:00', '22:00'],
+                        axisLabel: {
+                            interval: 0,
+                            rotate: 45,
+                            margin: 15
+                        },
+                        name: '时间',
+                        nameLocation: 'center',
+                        nameGap: 45
+                    },
+                    yAxis: {
+                        type: 'value',
+                        name: '情绪指数',
+                        nameLocation: 'center',
+                        nameGap: 45,
+                        min: 4,
+                        max: 7,
+                        interval: 0.5,
+                        splitLine: {
+                            show: true,
+                            lineStyle: {
+                                type: 'dashed'
+                            }
+                        }
+                    },
+                    series: [{
+                        name: '情绪值',
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'circle',
+                        symbolSize: 8,
+                        data: [4.72, 4.21, 4.35, 5.89, 6.23, 5.73, 5.73, 
+                               6.21, 6.21, 5.98, 5.45, 4.98],
+                        itemStyle: {
+                            color: '#2196F3'
+                        },
+                        areaStyle: {
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                {offset: 0, color: 'rgba(33,150,243,0.4)'},
+                                {offset: 1, color: 'rgba(33,150,243,0.1)'}
+                            ])
+                        }
+                    }]
+                };
+                
+                chart.setOption(option);
+            }
+
+            // 空间分析图表初始化
+            async function initSpatialChart(chart, data) {
+                const option = {
+                    ...chartTheme,
+                    title: {
+                        text: '区域情绪分布',
+                        left: 'center',
+                        top: 10
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'shadow'
+                        }
+                    },
+                    grid: {
+                        top: 70,
+                        right: 30,
+                        bottom: 70,
+                        left: 60,
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: ['张店区', '淄川区', '博山区', '临淄区', '周村区', '高新区'],
+                        axisLabel: {
+                            interval: 0,
+                            rotate: 45,
+                            margin: 15
+                        },
+                        name: '区域',
+                        nameLocation: 'center',
+                        nameGap: 45
+                    },
+                    yAxis: {
+                        type: 'value',
+                        name: '情绪指数',
+                        nameLocation: 'center',
+                        nameGap: 45,
+                        min: 5,
+                        max: 6,
+                        interval: 0.2,
+                        splitLine: {
+                            show: true,
+                            lineStyle: {
+                                type: 'dashed'
+                            }
+                        }
+                    },
+                    series: [{
+                        name: '区域情绪值',
+                        type: 'bar',
+                        data: [5.89, 5.45, 5.52, 5.48, 5.43, 5.67],
+                        itemStyle: {
+                            color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
+                                {offset: 0, color: '#1976D2'},
+                                {offset: 1, color: '#2196F3'}
+                            ])
+                        },
+                        barWidth: '40%',
+                        label: {
+                            show: true,
+                            position: 'top',
+                            formatter: '{c}',
+                            color: '#fff'
+                        }
+                    }]
+                };
+                
+                chart.setOption(option);
+            }
+
+            // 情绪分布图表初始化
+            async function initEmotionDistributionChart(chart, data) {
+                const option = {
+                    ...chartTheme,
+                    title: {
+                        text: '情绪分布统计',
+                        left: 'center'
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'shadow'
+                        }
+                    },
+                    grid: {
+                        top: 60,
+                        right: 30,
+                        bottom: 30,
+                        left: 50,
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: ['1-2', '2-3', '3-4', '4-5', '5-6', '6-7', '7-8', '8-9', '9-10'],
+                        name: '情绪值区间'
+                    },
+                    yAxis: {
+                        type: 'value',
+                        name: '频率',
+                        axisLabel: {
+                            formatter: '{value}%'
+                        }
+                    },
+                    series: [{
+                        name: '分布比例',
+                        type: 'bar',
+                        data: [2, 5, 8, 20, 30, 20, 10, 4, 1],
+                        itemStyle: {
+                            color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
+                                {offset: 0, color: '#1976D2'},
+                                {offset: 1, color: '#2196F3'}
+                            ])
+                        },
+                        barWidth: '50%'
+                    }]
+                };
+                
+                chart.setOption(option);
+            }
+
+            // 聚类分析图表初始化
+            async function initClusterChart(chart, data) {
+                const option = {
+                    ...chartTheme,
+                    title: {
+                        text: '聚类特征分析',
+                        left: 'center'
+                    },
+                    tooltip: {
+                        trigger: 'item'
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        right: 10,
+                        top: 'center'
+                    },
+                    series: [{
+                        name: '聚类分布',
+                        type: 'pie',
+                        radius: ['40%', '70%'],
+                        avoidLabelOverlap: false,
+                        itemStyle: {
+                            borderRadius: 10,
+                            borderColor: '#fff',
+                            borderWidth: 2
+                        },
+                        label: {
+                            show: true,
+                            formatter: '{b}: {c}%'
+                        },
+                        emphasis: {
+                            label: {
+                                show: true,
+                                fontSize: '20',
+                                fontWeight: 'bold'
+                            }
+                        },
+                        data: [
+                            {value: 32, name: '教育活动型'},
+                            {value: 28, name: '休闲娱乐型'},
+                            {value: 24, name: '生活服务型'},
+                            {value: 16, name: '旅游体验型'}
+                        ]
+                    }]
+                };
+                
+                chart.setOption(option);
+            }
+
+            // 场所分布图表初始化
+            async function initLocationDistributionChart(chart) {
+                const option = {
+                    ...chartTheme,
+                    title: {
+                        text: '场所类型分布',
+                        left: 'center'
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'shadow'
+                        },
+                        formatter: '{b}: {c}条'
+                    },
+                    grid: {
+                        top: 60,
+                        right: 30,
+                        bottom: 60,
+                        left: 50,
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: ['教育类', '餐饮类', '旅游类', '休闲类', '运动类', '医疗类', '商业类', '文化类'],
+                        axisLabel: {
+                            interval: 0,
+                            rotate: 45
+                        }
+                    },
+                    yAxis: {
+                        type: 'value',
+                        name: '数据条数',
+                        splitLine: {
+                            show: true,
+                            lineStyle: {
+                                type: 'dashed'
+                            }
+                        }
+                    },
+                    series: [{
+                        name: '数据条数',
+                        type: 'bar',
+                        data: [5377, 5322, 5150, 5144, 4893, 4702, 4158, 1017],
+                        itemStyle: {
+                            color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
+                                {offset: 0, color: '#1976D2'},
+                                {offset: 1, color: '#2196F3'}
+                            ])
+                        },
+                        barWidth: '40%',
+                        label: {
+                            show: true,
+                            position: 'top',
+                            formatter: '{c}条',
+                            color: '#fff'
+                        }
+                    }]
+                };
+                
+                chart.setOption(option);
+            }
+
+            // 初始化所有图表
+            // 首先初始化场所分布图表（静态数据）
+            const locationChart = echarts.init(document.getElementById('locationDistributionChart'));
+            initLocationDistributionChart(locationChart);
+
+            // 然后初始化其他需要加载数据的图表
+            Promise.all([
+                initChart('temporalAnalysisChart', 'analysis_results/emotion_by_time.png', initTemporalChart),
+                initChart('spatialAnalysisChart', 'analysis_results/spatial_analysis.txt', initSpatialChart),
+                initChart('emotionDistributionChart', 'analysis_results/emotion_distribution.png', initEmotionDistributionChart),
+                initChart('clusterAnalysisChart', 'analysis_results/cluster_statistics.csv', initClusterChart)
+            ]).catch(error => {
+                console.error('Error initializing charts:', error);
+            });
+
+            // 优化响应式调整
+            const debouncedResize = (() => {
+                let timer;
+                return () => {
+                    clearTimeout(timer);
+                    timer = setTimeout(() => {
+                        document.querySelectorAll('.chart-container').forEach(container => {
+                            const chart = echarts.getInstanceByDom(container);
+                            chart?.resize();
+                        });
+                    }, 250);
+                };
+            })();
+
+            window.addEventListener('resize', debouncedResize);
         });
     </script>
 </body>

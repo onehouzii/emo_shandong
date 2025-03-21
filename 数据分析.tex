@@ -1,0 +1,124 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{ctex}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{geometry}
+
+\geometry{a4paper,left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
+
+\title{数据分析方法}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{研究方法}
+
+\subsection{数据预处理与基础统计分析}
+
+本研究首先对淄博市情绪数据进行预处理和基础统计分析。数据集包含35,763条记录，每条记录包含地点名称、类型、经纬度、时间段和情绪值等信息。使用Python的pandas库进行数据清洗和基础统计分析，包括描述性统计和分布分析。
+
+\subsection{时空分析方法}
+
+\subsubsection{空间自相关分析}
+
+采用全局Moran's I指数评估情绪值的空间自相关性。计算公式如下：
+
+\begin{equation}
+I = \frac{n}{S_0} \frac{\sum_{i=1}^n \sum_{j=1}^n w_{ij}(x_i - \bar{x})(x_j - \bar{x})}{\sum_{i=1}^n (x_i - \bar{x})^2}
+\end{equation}
+
+其中：
+\begin{itemize}
+\item n为观测点数量
+\item $w_{ij}$为空间权重矩阵元素
+\item $x_i$和$x_j$为位置i和j的情绪值
+\item $\bar{x}$为情绪值平均值
+\item $S_0$为所有空间权重的总和
+\end{itemize}
+
+使用DistanceBand方法构建基于距离的空间权重矩阵，阈值设置为0.01，采用行标准化处理。
+
+\subsubsection{时间序列分析}
+
+对时间序列数据进行季节性分解，使用加法模型：
+
+\begin{equation}
+Y_t = T_t + S_t + R_t
+\end{equation}
+
+其中：
+\begin{itemize}
+\item $Y_t$为观测值
+\item $T_t$为趋势项
+\item $S_t$为季节项
+\item $R_t$为残差项
+\end{itemize}
+
+使用statsmodels库的seasonal\_decompose函数进行分解，周期设置为7天。
+
+\subsection{聚类分析}
+
+采用K-means聚类算法对情绪数据进行空间聚类分析。特征包括经度、纬度和情绪值，进行如下步骤：
+
+\begin{enumerate}
+\item 数据标准化：使用StandardScaler进行特征标准化
+\item 最优聚类数确定：使用肘部法则（Elbow Method）
+\item 聚类实现：采用KMeans算法，随机种子设为42
+\end{enumerate}
+
+聚类目标函数：
+
+\begin{equation}
+J = \sum_{j=1}^k \sum_{i=1}^n \|x_i^{(j)} - c_j\|^2
+\end{equation}
+
+其中：
+\begin{itemize}
+\item k为聚类数
+\item n为样本数
+\item $x_i^{(j)}$为第j类中的第i个样本
+\item $c_j$为第j类的聚类中心
+\end{itemize}
+
+\subsection{统计检验方法}
+
+\subsubsection{方差分析}
+
+对不同场所类型的情绪差异进行单因素方差分析（One-way ANOVA），并使用Tukey HSD进行事后检验。
+
+\subsubsection{非参数检验}
+
+使用Kruskal-Wallis H检验分析不同时间段的情绪差异，适用于可能不满足正态分布假设的数据。
+
+\subsubsection{置信区间估计}
+
+采用t分布计算情绪值的95\%置信区间：
+
+\begin{equation}
+CI = \bar{x} \pm t_{(n-1, \alpha/2)} \times \frac{s}{\sqrt{n}}
+\end{equation}
+
+其中：
+\begin{itemize}
+\item $\bar{x}$为样本均值
+\item s为样本标准差
+\item n为样本量
+\item $t_{(n-1, \alpha/2)}$为自由度为n-1的t分布的临界值
+\end{itemize}
+
+\subsection{可视化方法}
+
+采用多种可视化技术展示分析结果：
+\begin{enumerate}
+\item 使用folium库生成交互式热力图
+\item 使用matplotlib和seaborn库绘制统计图表
+\item 使用箱线图展示不同类别的情绪分布
+\item 使用时序图展示情绪随时间的变化趋势
+\end{enumerate}
+
+所有分析使用Python 3.8及其科学计算生态系统实现，主要依赖库包括：pandas、numpy、scipy、sklearn、statsmodels、libpysal、esda等。分析结果以图表和数值统计形式保存在analysis\_results目录下。
+
+\end{document} 

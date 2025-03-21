@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>数据分析方法</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 { text-align: center; }
+        .equation {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .itemize {
+            margin-left: 20px;
+        }
+        .enumerate {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>数据分析方法</h1>
+
+<h2>3. 研究方法</h2>
+
+<h3>3.1 数据预处理与基础统计分析</h3>
+
+<p>本研究首先对淄博市情绪数据进行预处理和基础统计分析。数据集包含35,763条记录，每条记录包含地点名称、类型、经纬度、时间段和情绪值等信息。使用Python的pandas库进行数据清洗和基础统计分析，包括描述性统计和分布分析。</p>
+
+<h3>3.2 时空分析方法</h3>
+
+<h4>3.2.1 空间自相关分析</h4>
+
+<p>采用全局Moran's I指数评估情绪值的空间自相关性。计算公式如下：</p>
+
+<div class="equation">
+\[
+I = \frac{n}{S_0} \frac{\sum_{i=1}^n \sum_{j=1}^n w_{ij}(x_i - \bar{x})(x_j - \bar{x})}{\sum_{i=1}^n (x_i - \bar{x})^2}
+\]
+</div>
+
+<p>其中：</p>
+<ul class="itemize">
+    <li>n为观测点数量</li>
+    <li>\(w_{ij}\)为空间权重矩阵元素</li>
+    <li>\(x_i\)和\(x_j\)为位置i和j的情绪值</li>
+    <li>\(\bar{x}\)为情绪值平均值</li>
+    <li>\(S_0\)为所有空间权重的总和</li>
+</ul>
+
+<p>使用DistanceBand方法构建基于距离的空间权重矩阵，阈值设置为0.01，采用行标准化处理。</p>
+
+<h4>3.2.2 时间序列分析</h4>
+
+<p>对时间序列数据进行季节性分解，使用加法模型：</p>
+
+<div class="equation">
+\[
+Y_t = T_t + S_t + R_t
+\]
+</div>
+
+<p>其中：</p>
+<ul class="itemize">
+    <li>\(Y_t\)为观测值</li>
+    <li>\(T_t\)为趋势项</li>
+    <li>\(S_t\)为季节项</li>
+    <li>\(R_t\)为残差项</li>
+</ul>
+
+<p>使用statsmodels库的seasonal_decompose函数进行分解，周期设置为7天。</p>
+
+<h3>3.3 聚类分析</h3>
+
+<p>采用K-means聚类算法对情绪数据进行空间聚类分析。特征包括经度、纬度和情绪值，进行如下步骤：</p>
+
+<ol class="enumerate">
+    <li>数据标准化：使用StandardScaler进行特征标准化</li>
+    <li>最优聚类数确定：使用肘部法则（Elbow Method）</li>
+    <li>聚类实现：采用KMeans算法，随机种子设为42</li>
+</ol>
+
+<p>聚类目标函数：</p>
+
+<div class="equation">
+\[
+J = \sum_{j=1}^k \sum_{i=1}^n \|x_i^{(j)} - c_j\|^2
+\]
+</div>
+
+<p>其中：</p>
+<ul class="itemize">
+    <li>k为聚类数</li>
+    <li>n为样本数</li>
+    <li>\(x_i^{(j)}\)为第j类中的第i个样本</li>
+    <li>\(c_j\)为第j类的聚类中心</li>
+</ul>
+
+<h3>3.4 统计检验方法</h3>
+
+<h4>3.4.1 方差分析</h4>
+
+<p>对不同场所类型的情绪差异进行单因素方差分析（One-way ANOVA），并使用Tukey HSD进行事后检验。</p>
+
+<h4>3.4.2 非参数检验</h4>
+
+<p>使用Kruskal-Wallis H检验分析不同时间段的情绪差异，适用于可能不满足正态分布假设的数据。</p>
+
+<h4>3.4.3 置信区间估计</h4>
+
+<p>采用t分布计算情绪值的95%置信区间：</p>
+
+<div class="equation">
+\[
+CI = \bar{x} \pm t_{(n-1, \alpha/2)} \times \frac{s}{\sqrt{n}}
+\]
+</div>
+
+<p>其中：</p>
+<ul class="itemize">
+    <li>\(\bar{x}\)为样本均值</li>
+    <li>s为样本标准差</li>
+    <li>n为样本量</li>
+    <li>\(t_{(n-1, \alpha/2)}\)为自由度为n-1的t分布的临界值</li>
+</ul>
+
+<h3>3.5 可视化方法</h3>
+
+<p>采用多种可视化技术展示分析结果：</p>
+<ol class="enumerate">
+    <li>使用folium库生成交互式热力图</li>
+    <li>使用matplotlib和seaborn库绘制统计图表</li>
+    <li>使用箱线图展示不同类别的情绪分布</li>
+    <li>使用时序图展示情绪随时间的变化趋势</li>
+</ol>
+
+<p>所有分析使用Python 3.8及其科学计算生态系统实现，主要依赖库包括：pandas、numpy、scipy、sklearn、statsmodels、libpysal、esda等。分析结果以图表和数值统计形式保存在analysis_results目录下。</p>
+
+</body>
+</html> 
